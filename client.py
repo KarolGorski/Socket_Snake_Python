@@ -20,7 +20,7 @@ if data:
     client_socket.send(protocol_commands.pack_ok_reply())
     gameRender.game_start()
 
-input = ""
+current_input = ""
 
 def get_input():
     print("get_input")
@@ -30,13 +30,14 @@ def get_input():
             break
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                input = keys.RIGHT
+                return keys.RIGHT
             if event.key == pygame.K_LEFT:
-                input = keys.LEFT
+                return keys.LEFT
             if event.key == pygame.K_DOWN:
-                input = keys.DOWN
+                return keys.DOWN
             if event.key == pygame.K_UP:
-                input = keys.UP
+                return keys.UP
+
 
 def server_recv_handler(client_socket, gameRender):
     while True:
@@ -46,16 +47,19 @@ def server_recv_handler(client_socket, gameRender):
         gameRender.game_update(body1, food_pos)
 
 def server_send_handler(client_socket):
+    current_input = ""
     while True:
+
+        current_input = get_input()
         print("server_send_handler")
-        if (input != ""):
-            client_socket.send(input().encode())
+        if (current_input != ""):
+            client_socket.send(current_input.encode())
             client_socket.recv(2)
-            input = ""
+            current_input = ""
 
 
-threading.Thread(server_recv_handler(client_socket,gameRender)).start()
-threading.Thread(server_send_handler(client_socket)).start()
+threading.Thread(target=server_recv_handler,args =[client_socket,gameRender]).start()
+threading.Thread(target=server_send_handler,args=[client_socket]).start()
 
 # while True:
 #     snake_body = pickle.loads(client_socket.recv(4096))
@@ -66,10 +70,10 @@ threading.Thread(server_send_handler(client_socket)).start()
 #     client_socket.send(protocol_commands.pack_ok_reply())
 #     gameRender.game_update(snake_body, food_pos, score)
 #     get_input()
-#     if(input != ""):
-#         client_socket.send(input().encode())
+#     if(current_input != ""):
+#         client_socket.send(current_input().encode())
 #         client_socket.recv()
-#         input = ""
+#         current_input = ""
 
 
 
