@@ -13,9 +13,13 @@ Program składa się z 2 głównych programów - client i server.
 Niemniej tym dwóm towarzyszą inne pliki/klasy, które zawierają content wspomagający:
 
 -game.py - Klasa, która zarządza pojedynczym pokojem gry - oblicza ruchy, przyjmuje input od graczy, generuje kolizje, itp. Odpala się ją w wątku na serwerze.
+
 -render.py - Klasa, która zarządza wyświetlaniem danych otrzymanych przez serwer (od game) po stronie clienta
+
 -protocol_commands.py - Plik, w którym zadeklarowane są typy wiadomości protokołu - zarówno ich składanie - przygotowanie do przesłania, jak i rozparsowywanie
+
 -keys.py - Plik z zadeklarowanymi stałymi stringami
+
 -logger.py - Klasa, która przyjmuje informacje od serwera, a następnie loguje je do plików.
 
 Typy wiadomości protokołu:
