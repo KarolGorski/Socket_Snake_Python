@@ -1,0 +1,7 @@
+RIGHT = "RIGHT"
+LEFT = "LEFT"
+DOWN = "DOWN"
+UP = "UP"
+GAME_NAME = "The PAS Snake"
+GAME_OVER = "Game Over"
+HI_CLIENT = "Hi There! \n Click JOIN to start"
