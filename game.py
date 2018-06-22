@@ -7,7 +7,7 @@ import keys
 #Constants
 BOARD_SIZE = 80 #in block
 BLOCK_SIZE = 8 #1 block in pixels
-GAME_SPEED = 10 #Game Speed
+GAME_SPEED = 1 #Game Speed
 
 
 class Snake():
@@ -89,10 +89,10 @@ class Player():
         self.snake = Snake()
         self.score = 0
         self.input = ""
+        self.winner = False
 
     def game_over(self):
-        print("GAME OVER")
-        self.state = keys.GAME_OVER
+         self.winner = False
 
     def set_input(self, input):
         self.input = input
@@ -144,6 +144,6 @@ class Game():
                     player.score +=1
                     self.food_spawner.set_food_on_screen(False)
                 if player.snake.check_collision() == 1:
-                    player.game_over()
+                    self.game_finished = True
 
 

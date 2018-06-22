@@ -29,6 +29,10 @@ class GameRender():
     def game_start(self):
         self.window.fill(pygame.Color(0, 0, 0))
 
+    def game_intro(self,msg):
+        label = pygame.font.SysFont("monospace",15).render(msg,1,(255,255,255))
+        self.window.blit(label,(int(self.BOARD_SIZE/4), int(self.BOARD_SIZE/4)))
+
     def game_update(self, snake_body, food_pos, score):
         # Draw Snake
         head = 1

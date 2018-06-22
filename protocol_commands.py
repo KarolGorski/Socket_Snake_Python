@@ -1,29 +1,20 @@
 import keys
-import pickle
 
-def parse_recvd_data(data):
-    parts = data.split(b'\0')
-    msgs = parts[:-1]
-    rest = parts[-1]
-    return (msgs, rest)
 
-def recv_msg(sock, data = bytes()):
-    msgs = []
-    while not msgs:
-        recvd = sock.recv(4096)
-        if not recvd:
-            raise ConnectionError()
-        data = data+recvd
-        (msgs, rest) = parse_recvd_data(data)
-    msgs = [msg.decode('utf-8') for msg in msgs]
-    return (msgs,rest)
+def initial_parse(message):
+    message_string = message.decode()
+    parts = message_string.split('.', 1)
+    message_id = int(parts[0])
+    return message_id
 
-def parser(message):
-    string = message.decode()
-    print (string)
-    parts = string.split('|')
-    message_id = parts[0]
-    print (message_id)
+def decode_basic_msg(message):
+    print (message)
+    return message.decode().split('.')[1]
+
+
+def pack_ok_reply():
+    string = "0."
+    return string.encode()
 
 def is_it_ok(message):
     if message.decode().split('.',1)[0] == "0":
@@ -31,38 +22,30 @@ def is_it_ok(message):
     else:
         return False
 
-
-def initial_parse(message):
-    message_string=message.decode()
-    parts = message_string.split('.',1)
-    message_id = int(parts[0])
-    return message_id
-
-def pack_ok_reply():
-    string = "0."
-    return string.encode()
-
-def pack_connection_reply():
-    string = "1."+keys.HI_CLIENT
-    return string.encode()
-
 def pack_join_request():
-    string = "2."
+    string = "1."
     return string.encode()
 
-def pack_join_reply():
-    string = "3."
-    return string.encode
+def pack_join_reply(msg):
+    string = "2."+msg
+    return string.encode()
+
+def is_it_play(msg):
+    print (msg.decode())
+    if msg.decode().split(".")[1] == keys.PLAY:
+        return True
+    else:
+        return False
 
 def pack_init_info(body1, body2,GAME_SPEED, BOARD_SIZE, BLOCK_SIZE):
-    string ="4."
+    string ="3."
     string+=str(BOARD_SIZE)+"."
     string+=str(BLOCK_SIZE)+"."
     string+=str(GAME_SPEED)+"."
     #while()
 
 def pack_frame_info(body1, body2, food_pos):
-    string = "5."
+    string = "4."
     for i in body1:
         string+=';'+str(i[0])+','+str(i[1])
     string += '.'
@@ -97,5 +80,4 @@ def unpack_frame_info(message):
 
     return (body1, body2, food_pos)
 
-#def pack_start_counting(time_to_start, ):
 

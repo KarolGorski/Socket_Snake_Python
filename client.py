@@ -14,13 +14,19 @@ buff_size = 1024
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(server_address)
 gameRender = render.GameRender()
+#pygame.init()
 
-data = client_socket.recv(1000)
-if data:
-    client_socket.send(protocol_commands.pack_ok_reply())
-    gameRender.game_start()
+while True:
+    data = client_socket.recv(6)
+    print(data)
+    if protocol_commands.is_it_play(data):
+        client_socket.send(protocol_commands.pack_ok_reply())
+        gameRender.game_start()
+        break
+    else:
+        client_socket.send(protocol_commands.pack_ok_reply())
+        #gameRender.game_intro(protocol_commands.decode_basic_msg(data))
 
-current_input = ""
 
 def get_input():
     print("get_input")
@@ -37,6 +43,8 @@ def get_input():
                 return keys.DOWN
             if event.key == pygame.K_UP:
                 return keys.UP
+    return None
+
 
 
 def server_recv_handler(client_socket, gameRender):
@@ -47,15 +55,12 @@ def server_recv_handler(client_socket, gameRender):
         gameRender.game_update(body1, food_pos)
 
 def server_send_handler(client_socket):
-    current_input = ""
     while True:
-
         current_input = get_input()
         print("server_send_handler")
-        if (current_input != ""):
+        if (current_input):
             client_socket.send(current_input.encode())
             client_socket.recv(2)
-            current_input = ""
 
 
 threading.Thread(target=server_recv_handler,args =[client_socket,gameRender]).start()
