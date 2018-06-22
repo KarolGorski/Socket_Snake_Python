@@ -59,6 +59,7 @@ def pack_frame_info(body1, body2, food_pos):
 
 
 def unpack_frame_info(message):
+    print (message)
     body1 = []
     body2 = []
     food_pos = []
@@ -79,5 +80,15 @@ def unpack_frame_info(message):
     food_pos.append([int(tab[0]), int(tab[1])])
 
     return (body1, body2, food_pos)
+
+def pack_input_info(message):
+    return ("5."+message).encode()
+
+def unpack_input_info(message):
+    return message.decode().split(".",1)[1]
+
+def pack_game_over():
+    return "6.".encode()
+
 
 

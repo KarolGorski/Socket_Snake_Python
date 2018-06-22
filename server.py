@@ -54,10 +54,11 @@ def add_player_to_game(player):
 def client_recv_handler(client_socket, player, single_game):
     while single_game.game_finished == False:
         print("client_recv_handler")
-        data = client_socket.recv(1024)
+        data = client_socket.recv(10)
         if data:
-            player.input=data.decode()
+            player.input=protocol_commands.unpack_input_info(data)
             client_socket.send(protocol_commands.pack_ok_reply())
+    client_socket.send(protocol_commands.pack_game_over())
 
 
 def client_send_handler(client_socket,player,single_game):

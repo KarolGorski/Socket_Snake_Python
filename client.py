@@ -14,7 +14,7 @@ buff_size = 1024
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(server_address)
 gameRender = render.GameRender()
-#pygame.init()
+pygame.init()
 
 while True:
     data = client_socket.recv(6)
@@ -25,11 +25,10 @@ while True:
         break
     else:
         client_socket.send(protocol_commands.pack_ok_reply())
-        #gameRender.game_intro(protocol_commands.decode_basic_msg(data))
+        gameRender.game_intro(protocol_commands.decode_basic_msg(data))
 
 
 def get_input():
-    print("get_input")
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             render.game_over()
@@ -47,8 +46,11 @@ def get_input():
 
 
 
-def server_recv_handler(client_socket, gameRender):
+def server_recv_handler(client_socket, gameRender, send_handler):
     while True:
+        if(client_socket.recv(2).decode == ".6"):
+            send_handler.stop()
+            break
         print("server_recv_handler")
         body1, body2, food_pos = protocol_commands.unpack_frame_info(client_socket.recv(4096))
         client_socket.send(protocol_commands.pack_ok_reply())
@@ -57,30 +59,13 @@ def server_recv_handler(client_socket, gameRender):
 def server_send_handler(client_socket):
     while True:
         current_input = get_input()
-        print("server_send_handler")
-        if (current_input):
-            client_socket.send(current_input.encode())
+        if (current_input!=None):
+            print("server_send_handler")
+            client_socket.send(protocol_commands.pack_input_info(current_input))
             client_socket.recv(2)
 
 
-threading.Thread(target=server_recv_handler,args =[client_socket,gameRender]).start()
-threading.Thread(target=server_send_handler,args=[client_socket]).start()
-
-# while True:
-#     snake_body = pickle.loads(client_socket.recv(4096))
-#     client_socket.send(protocol_commands.pack_ok_reply())
-#     food_pos = pickle.loads(client_socket.recv(50))
-#     client_socket.send(protocol_commands.pack_ok_reply())
-#     score = client_socket.recv(1024).decode()
-#     client_socket.send(protocol_commands.pack_ok_reply())
-#     gameRender.game_update(snake_body, food_pos, score)
-#     get_input()
-#     if(current_input != ""):
-#         client_socket.send(current_input().encode())
-#         client_socket.recv()
-#         current_input = ""
+send_handler = threading.Thread(target=server_send_handler,args=[client_socket]).start()
+threading.Thread(target=server_recv_handler,args =[client_socket,gameRender, send_handler]).start()
 
 
-
-
-#client_socket.close()

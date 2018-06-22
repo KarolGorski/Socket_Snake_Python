@@ -28,11 +28,11 @@ ID, 		Nazwa, 			Typy danych, 		            Składnia
 
 0.			OK			    string 					        "0."
 1.			JOIN_REQUEST	string					        "1."
-2.			JOIN_REPLY		string					        "2.WAIT"/"2.PLAY"
+2.			JOIN_REPLY		string +(string)		        "2.WAIT"/"2.PLAY"
 3.			INIT_INFO		int[][], int[][],int,int,int	"3.;1,9;2,21;1,0.;1,4;1,9;2,21;1.1313.1331.134314"
 4.			FRAME_INFO		int[][], int[][], int[]			"3.;1,9;2,21;1,0.;1,4;1,9;2,21;1.5,7"
-5.
-6.
+5.          INPUT_INFO      string+(string)                 "5.LEFT"
+6.          GAME_OVER       string                          "6."
 7.
 8.
 9.
